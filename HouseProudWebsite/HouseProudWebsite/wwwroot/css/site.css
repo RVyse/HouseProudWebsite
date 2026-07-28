@@ -93,8 +93,10 @@ html, body {
 
 /* FocusOnNavigate moves keyboard focus to the page's h1 for accessibility;
    suppress the visible focus ring so it doesn't look like a stray selection box. */
-h1:focus {
-    outline: none;
+h1:focus,
+h1:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .hero p.subtitle {
