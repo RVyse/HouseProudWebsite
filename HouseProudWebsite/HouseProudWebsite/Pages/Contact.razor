@@ -1,0 +1,31 @@
+@page "/contact"
+
+<PageTitle>House Proud Cleaning Solutions - Contact Us</PageTitle>
+
+<section class="hero">
+    <h1>Get In Touch</h1>
+    <p class="subtitle">
+        Ready for a free quote or have a question? Message us on WhatsApp and we'll
+        get back to you as soon as possible.
+    </p>
+</section>
+
+<section class="section" style="text-align:center;">
+    <div class="card" style="max-width:480px; margin:0 auto;">
+        <div class="icon">💬</div>
+        <h3>Chat With Us on WhatsApp</h3>
+        <p>Tap the button below to send us a WhatsApp message directly.</p>
+        <a href="@whatsAppLink" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+            Message Us on WhatsApp
+        </a>
+        <p style="margin-top:1rem;">Or call/text us directly at <strong>@displayNumber</strong>.</p>
+    </div>
+</section>
+
+@code {
+    private const string PhoneNumberInternational = "447523049100";
+    private const string DisplayNumberText = "07523 049100";
+    private readonly string displayNumber = DisplayNumberText;
+    private readonly string whatsAppLink =
+        $"https://wa.me/{PhoneNumberInternational}?text={Uri.EscapeDataString("Hi, I'd like a free quote for cleaning services.")}";
+}

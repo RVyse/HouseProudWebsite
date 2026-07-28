@@ -1,0 +1,20 @@
+﻿@inherits LayoutComponentBase
+
+<div class="site">
+    <header class="site-header">
+        <a href="/" class="brand">
+            <img src="images/icon.png" alt="House Proud Cleaning Solutions logo" />
+            <span class="brand-name">House Proud Cleaning Solutions</span>
+        </a>
+        <NavMenu />
+    </header>
+
+    <main class="site-main">
+        @Body
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; @DateTime.Now.Year House Proud Cleaning Solutions. All rights reserved.</p>
+        <p><a href="/contact">Get in touch</a> for a free quote.</p>
+    </footer>
+</div>
