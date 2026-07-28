@@ -91,6 +91,12 @@ html, body {
     color: var(--brand-dark);
 }
 
+/* FocusOnNavigate moves keyboard focus to the page's h1 for accessibility;
+   suppress the visible focus ring so it doesn't look like a stray selection box. */
+h1:focus {
+    outline: none;
+}
+
 .hero p.subtitle {
     font-size: 1.25rem;
     max-width: 640px;
@@ -104,6 +110,13 @@ html, body {
     font-weight: 700;
     text-decoration: none;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .btn-primary {
@@ -201,6 +214,29 @@ html, body {
     font-size: 1rem;
 }
 
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.social-links a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--brand-yellow);
+    color: var(--brand-dark);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.social-links a:hover {
+    background-color: var(--brand-yellow-dark);
+    transform: translateY(-2px);
+}
 @media (max-width: 600px) {
     .site-header {
         flex-direction: column;
