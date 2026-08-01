@@ -5,6 +5,96 @@
     --brand-text: #4a4433;
 }
 
+/* Gallery styles */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.gallery-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.gallery-item img {
+    max-width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+/* Reveal section styles */
+.reveal-section {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.reveal-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.reveal-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.plain-section {
+    padding-top: 1.5rem;
+}
+
+/* Showcase on home page */
+.showcase-section {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.showcase-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.showcase-item img {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+/* Description area under images; reserve space so items align even if some have no description */
+.img-desc {
+    min-height: 2.25rem; /* enough space for one short line */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0.5rem;
+    text-align: center;
+    color: var(--brand-text);
+    font-size: 0.95rem;
+}
+
+.img-desc p {
+    margin: 0;
+}
+
+
+
 html, body {
     margin: 0;
     padding: 0;

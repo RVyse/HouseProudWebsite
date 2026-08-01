@@ -1,0 +1,79 @@
+@using Microsoft.AspNetCore.Components
+
+@namespace HouseProudWebsite.Shared
+
+<div class="reveal-container">
+    <img src="@RevealSrc" class="reveal-image reveal-bottom" alt="reveal image" />
+    <img src="@TopSrc" class="reveal-image reveal-top" style="clip-path:@TopClip;" alt="top image" />
+
+    <div class="reveal-handle" style="left:@Percent%"></div>
+
+    <!-- Use oninput so the bound value updates continuously while dragging -->
+    <input class="reveal-range" type="range" min="0" max="100" @bind="Percent" @bind:event="oninput" />
+</div>
+
+@code {
+    [Parameter]
+    public string TopImage { get; set; } = string.Empty;
+
+    [Parameter]
+    public string RevealImage { get; set; } = string.Empty;
+
+    // percentage from left (0..100)
+    private int Percent { get; set; } = 50;
+
+    private string TopSrc => $"images/gallery/{TopImage}";
+    private string RevealSrc => $"images/gallery/reveal/{RevealImage}";
+    private string TopClip => $"inset(0 {100 - Percent}% 0 0)";
+}
+
+<style>
+    .reveal-container {
+        position: relative;
+        width: 100%;
+        max-width: 900px; /* increase size */
+        aspect-ratio: 3 / 2; /* wider display */
+        overflow: hidden;
+        border-radius: 10px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        margin: 0.5rem auto;
+        background: #f6f6f6;
+    }
+
+    .reveal-image {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .reveal-top {
+        /* update instantly while dragging */
+        transition: none;
+    }
+
+    .reveal-handle {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        background: rgba(255,255,255,0.95);
+        transform: translateX(-3px);
+        pointer-events: none;
+        box-shadow: 0 0 0 1px rgba(0,0,0,0.12);
+        border-radius: 3px;
+    }
+
+    .reveal-range {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: ew-resize;
+    }
+
+    /* responsive tweaks handled in site.css */
+</style>

@@ -1,0 +1,122 @@
+@page "/gallery"
+@using HouseProudWebsite.Models
+@using HouseProudWebsite.Shared
+@inject HttpClient Http
+
+<div class="section">
+    <h2>Gallery</h2>
+
+    @if (images == null)
+    {
+        <p>Loading...</p>
+    }
+    else if (!images.Any(i => i.Enabled))
+    {
+        <p>No images available.</p>
+    }
+    else
+    {
+        var revealList = images.Where(i => i.Enabled && i.IsImageReveal && !string.IsNullOrWhiteSpace(i.RevealImage)).ToList();
+        var plainList = images.Where(i => i.Enabled && (!i.IsImageReveal || string.IsNullOrWhiteSpace(i.RevealImage))).ToList();
+
+        if (revealList.Any())
+        {
+            <section class="section reveal-section">
+                <h2>Before / After</h2>
+                <div class="reveal-grid">
+                    @foreach (var img in revealList)
+                    {
+                        <div class="reveal-item">
+                            <ImageReveal TopImage="@img.Image" RevealImage="@img.RevealImage" />
+                            <div class="img-desc">
+                                @if (img.ShowDescription && !string.IsNullOrWhiteSpace(img.Description))
+                                {
+                                    <p>@img.Description</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+
+        if (plainList.Any())
+        {
+            <section class="section plain-section">
+                <h2>Gallery</h2>
+                <div class="gallery-grid">
+                    @foreach (var img in plainList)
+                    {
+                        <div class="gallery-item">
+                            <img src="images/gallery/@img.Image" alt="@img.Image" />
+                            <div class="img-desc">
+                                @if (img.ShowDescription && !string.IsNullOrWhiteSpace(img.Description))
+                                {
+                                    <p>@img.Description</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </section>
+        }
+    }
+</div>
+
+@code {
+    private List<ImageItem>? images;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var csv = await Http.GetStringAsync("data/images.csv");
+            var lines = csv.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length <= 1)
+            {
+                images = new List<ImageItem>();
+                return;
+            }
+
+            images = new List<ImageItem>();
+
+            // skip header (first line)
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var line = lines[i];
+                var parts = line.Split(',');
+                if (parts.Length < 4) continue;
+
+                var item = new ImageItem();
+                item.Image = parts[0].Trim();
+                bool.TryParse(parts[1].Trim(), out var isReveal);
+                item.IsImageReveal = isReveal;
+                item.RevealImage = parts[2].Trim();
+                bool.TryParse(parts[3].Trim(), out var enabled);
+                item.Enabled = enabled;
+                // optional Showcase column (index 4)
+                if (parts.Length >= 5)
+                {
+                    bool.TryParse(parts[4].Trim(), out var showcase);
+                    item.Showcase = showcase;
+                }
+                // optional Description (index 5) and ShowDescription (index 6)
+                if (parts.Length >= 6)
+                {
+                    item.Description = parts[5].Trim();
+                }
+                if (parts.Length >= 7)
+                {
+                    bool.TryParse(parts[6].Trim(), out var sd);
+                    item.ShowDescription = sd;
+                }
+
+                images.Add(item);
+            }
+        }
+        catch
+        {
+            images = new List<ImageItem>();
+        }
+    }
+}

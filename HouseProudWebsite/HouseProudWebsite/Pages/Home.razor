@@ -1,6 +1,9 @@
 ﻿@page "/"
 
 <PageTitle>House Proud Cleaning Solutions - Home</PageTitle>
+@using HouseProudWebsite.Models
+@using HouseProudWebsite.Shared
+@inject HttpClient Http
 
 <section class="hero">
     <h1>A Spotless Home, Every Time</h1>
@@ -42,8 +45,100 @@
     </div>
 </section>
 
+@* Showcase section: render reveal/ showcase images from CSV *@
+@if (showcaseImages == null)
+{
+    <section class="section showcase-section">
+        <p>Loading showcase...</p>
+    </section>
+}
+else if (showcaseImages.Any())
+{
+    <section class="section showcase-section">
+    <h2>Showcase</h2>
+        <p class="showcase-instruction" style="text-align:center; margin-top:0.25rem; font-size:0.95rem; color:var(--muted-color, #666);">
+            <strong>Before / After</strong> — Drag the slider left-to-right to compare the before and after images.
+        </p>
+        <div class="showcase-grid">
+            @foreach (var img in showcaseImages)
+            {
+                <div class="showcase-item">
+                    @if (img.IsImageReveal && !string.IsNullOrWhiteSpace(img.RevealImage))
+                    {
+                        <ImageReveal TopImage="@img.Image" RevealImage="@img.RevealImage" />
+                    }
+                    else
+                    {
+                        <img src="images/gallery/@img.Image" alt="@img.Image" />
+                    }
+                    <div class="img-desc">
+                        @if (img.ShowDescription && !string.IsNullOrWhiteSpace(img.Description))
+                        {
+                            <p>@img.Description</p>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+}
+
 <section class="section" style="text-align:center;">
     <h2>Ready for a Cleaner Space?</h2>
     <p>Contact us today for a free, no-obligation quote tailored to your needs.</p>
     <a href="/contact" class="btn btn-primary">Contact Us</a>
 </section>
+
+@code {
+    private List<HouseProudWebsite.Models.ImageItem>? showcaseImages;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var csv = await Http.GetStringAsync("data/images.csv");
+            var lines = csv.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length <= 1)
+            {
+                showcaseImages = new List<HouseProudWebsite.Models.ImageItem>();
+                return;
+            }
+
+            var all = new List<HouseProudWebsite.Models.ImageItem>();
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var parts = lines[i].Split(',');
+                if (parts.Length < 4) continue;
+                var item = new HouseProudWebsite.Models.ImageItem();
+                item.Image = parts[0].Trim();
+                bool.TryParse(parts[1].Trim(), out var isReveal);
+                item.IsImageReveal = isReveal;
+                item.RevealImage = parts[2].Trim();
+                bool.TryParse(parts[3].Trim(), out var enabled);
+                item.Enabled = enabled;
+                if (parts.Length >= 5)
+                {
+                    bool.TryParse(parts[4].Trim(), out var showcase);
+                    item.Showcase = showcase;
+                }
+                // optional Description (index 5) and ShowDescription (index 6)
+                if (parts.Length >= 6)
+                {
+                    item.Description = parts[5].Trim();
+                }
+                if (parts.Length >= 7)
+                {
+                    bool.TryParse(parts[6].Trim(), out var sd);
+                    item.ShowDescription = sd;
+                }
+                all.Add(item);
+            }
+
+            showcaseImages = all.Where(x => x.Enabled && x.Showcase).ToList();
+        }
+        catch
+        {
+            showcaseImages = new List<HouseProudWebsite.Models.ImageItem>();
+        }
+    }
+}
