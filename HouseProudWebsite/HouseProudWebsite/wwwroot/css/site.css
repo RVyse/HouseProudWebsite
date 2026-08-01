@@ -34,7 +34,8 @@
 
 .reveal-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    /* allow reveal items to shrink on small viewports */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.25rem;
     align-items: start;
 }
@@ -58,7 +59,8 @@
 
 .showcase-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    /* smaller minimum so items wrap instead of forcing horizontal scroll on narrow devices */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1.5rem;
     align-items: start;
 }
